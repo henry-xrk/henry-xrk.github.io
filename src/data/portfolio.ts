@@ -33,7 +33,7 @@ export const contactLinks = {
   github: "https://github.com/henry-xrk",
   email: "rongkaixu918@gmail.com",
   linkedin: "https://www.linkedin.com/in/rongkai-henry-xu/",
-  resume: "",
+  resume: "/Rongkai_Xu_Resume.pdf",
 }
 
 export const signal = {

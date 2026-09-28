@@ -12,7 +12,13 @@ export function Contact() {
         <ul className="contact-links">
           {links.map((link) => (
             <li key={link.label}>
-              <a className="button button-primary" href={link.href} rel="noreferrer noopener">
+              <a
+                className="button button-primary"
+                href={link.href}
+                {...(link.href.startsWith("mailto:")
+                  ? {}
+                  : { target: "_blank", rel: "noreferrer noopener" })}
+              >
                 {link.label}
               </a>
             </li>
