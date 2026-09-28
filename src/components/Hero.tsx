@@ -1,5 +1,5 @@
 import { motion } from "motion/react"
-import { profile } from "../data/portfolio"
+import { contactLinks, profile } from "../data/portfolio"
 import { useMediaQuery } from "../hooks/useMediaQuery"
 import { HeroInstrument } from "./HeroInstrument"
 
@@ -12,14 +12,14 @@ export function Hero() {
     if (reduced) {
       return {
         initial: false as const,
-        animate: { opacity: 1 },
+        animate: { y: 0 },
         transition: { duration: 0 },
       }
     }
     return {
-      initial: { opacity: 0, y: 18 },
-      animate: { opacity: 1, y: 0 },
-      transition: { duration: 0.7, delay, ease },
+      initial: { y: 10 },
+      animate: { y: 0 },
+      transition: { duration: 0.6, delay, ease },
     }
   }
 
@@ -44,8 +44,8 @@ export function Hero() {
               View my work
               <Arrow />
             </a>
-            <a className="button" href="#about">
-              About me
+            <a className="button" href={contactLinks.resume} target="_blank" rel="noreferrer noopener">
+              View Resume
             </a>
           </motion.div>
           <motion.p className="location" {...rise(0.42)}>

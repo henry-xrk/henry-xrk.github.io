@@ -1,31 +1,41 @@
-export type CaseSection = {
-  heading: string
-  paragraphs: string[]
-  points?: string[]
-}
+import type { ChartId } from "./showdown"
 
-export type ProjectVisual = "contract" | "admin" | "esg"
+export type ProjectVisual = "contract" | "admin" | "esg" | "showdown"
+
+export type Finding = {
+  id: string
+  title: string
+  chart: ChartId
+  finding: string
+  recommendation: string
+  note?: string
+}
 
 export type Project = {
   id: string
   index: string
   title: string
   type: string
-  summary: string
-  highlights: string[]
+  companyUrl?: string
+  problem: string
+  outcome: string
+  contributions: string[]
   tags: string[]
-  emphasis: "lead" | "second" | "support"
+  emphasis: "lead" | "standard"
   visual: ProjectVisual
-  sections: CaseSection[]
+  overview: string
+  role: string
+  technical: string
+  findings?: Finding[]
 }
 
 export const profile = {
   name: "Rongkai Xu",
   mark: "RX",
-  eyebrow: "Data · Analytics · Applied AI",
-  headline: "Turning complex data into useful products.",
+  eyebrow: "Data · Analytics Engineering · Applied AI",
+  headline: "Connecting business questions, data workflows, and products people can use.",
   introduction:
-    "I’m Rongkai, a Business Intelligence Analyst building data workflows, AI-powered applications, and tools that help people work with complex information. My work spans contract intelligence, operational analytics, and retrieval-based research.",
+    "I work where analysis and the software around it meet: SQL and PostgreSQL data work, TypeScript products, and applied AI. Recent projects cover contract intelligence, operational analytics, and retrieval-based research.",
   location: "San Francisco Bay Area",
 }
 
@@ -35,6 +45,8 @@ export const contactLinks = {
   linkedin: "https://www.linkedin.com/in/rongkai-henry-xu/",
   resume: "/Rongkai_Xu_Resume.pdf",
 }
+
+export const samvidUrl = "https://www.samvid.ai/"
 
 export const signal = {
   summary: "From an unstructured record to a view people can use.",
@@ -72,141 +84,125 @@ export const projects: Project[] = [
     id: "contract-intelligence",
     index: "01",
     title: "Contract Intelligence",
-    type: "Professional work · Samvid",
-    summary:
-      "Turning unstructured contracts into connected data for review, partner analysis, and renewal tracking.",
-    highlights: [
-      "Built structured extraction and hybrid entity matching for contract and partner records.",
-      "Moved processing into asynchronous AWS workflows and added reprocessing capabilities.",
-      "Developed lifecycle views, filters, and partner dashboards around the resulting data.",
+    type: "Professional Work · Samvid",
+    companyUrl: samvidUrl,
+    problem: "Useful contract fields start inside documents, but review and renewal work needs structured, consistent records.",
+    outcome: "Delivered a workflow for field extraction, partner matching, and review and renewal tracking.",
+    contributions: [
+      "Built the path from documents to structured contract and partner records.",
+      "Connected those records to review, lifecycle, and partner views.",
+      "Moved document processing into asynchronous cloud workflows so the interface stays responsive.",
     ],
-    tags: ["TypeScript", "Next.js", "PostgreSQL", "AWS Lambda", "Step Functions", "Redis", "LLMs", "Embeddings"],
+    tags: ["TypeScript", "Next.js", "SQL", "PostgreSQL", "AWS"],
     emphasis: "lead",
     visual: "contract",
-    sections: [
+    overview:
+      "A contract intelligence workflow that turns agreements into structured records for review, partner analysis, and renewal tracking.",
+    role: "Individual contributor on Samvid’s product team.",
+    technical:
+      "TypeScript and Next.js for the review views, SQL and PostgreSQL for contract and partner records, and asynchronous document processing on AWS.",
+  },
+  {
+    id: "scu-analytics-showdown",
+    index: "02",
+    title: "SCU Spring Analytics Showdown",
+    type: "Team Analytics Competition · Santa Clara University",
+    problem: "The team needed a clear view of payment delays, client engagement, and regional payment performance.",
+    outcome: "Second Place, 2025. The team presented its findings and recommendations to faculty and industry judges.",
+    contributions: [
+      "Led a four-person team analyzing payment delays, client engagement, and regional performance.",
+      "Contributed SQL analysis and reviewed Tableau findings across workstreams.",
+      "Consolidated the team’s findings into recommendations presented to faculty and industry judges.",
+    ],
+    tags: ["SQL", "PostgreSQL", "Tableau"],
+    emphasis: "standard",
+    visual: "showdown",
+    overview:
+      "A team analytics competition at Santa Clara University, working from a client payments dataset in PostgreSQL and presenting the analysis in Tableau.",
+    role: "Team lead on a four-person Santa Clara University competition team.",
+    technical: "SQL and PostgreSQL for the analysis, and Tableau for the presented views.",
+    findings: [
       {
-        heading: "Problem",
-        paragraphs: [
-          "Contract data needs to support search, review, and renewal decisions, but the useful fields begin inside documents. Variations in partner names and incomplete dates make consistent reporting harder.",
-          "Processing also needs to continue without blocking the web interface.",
-        ],
+        id: "regional",
+        title: "Regional payment performance",
+        chart: "zone",
+        finding:
+          "Payment success rates ranged from 72.3% in Alta Guajira to 81.0% in Sierra Nevada—an 8.8 percentage-point gap.",
+        recommendation:
+          "Prioritize operational support in the lower-performing region and investigate practices associated with stronger performance.",
+        note: "The map marks Alta Guajira at an approximate regional location.",
       },
       {
-        heading: "My Contribution",
-        paragraphs: [
-          "I built and iterated on the extraction workflow, partner matching, persistence layer, and the interfaces used to review the results.",
-          "My work connected backend processing with Contract Intelligence, Partner 360, and renewal views.",
-        ],
+        id: "engagement",
+        title: "Client engagement",
+        chart: "activation",
+        finding:
+          "39% of clients were classified as inactive in the analyzed dataset, indicating a segment worth investigating for potential disengagement.",
+        recommendation: "Review activation history and payment records to prioritize follow-up.",
       },
       {
-        heading: "Approach",
-        paragraphs: [
-          "Extraction moved from an in-process flow into asynchronous Lambda execution, and later into Step Functions batch orchestration. The path is document ingestion, asynchronous orchestration, extraction and matching, PostgreSQL, then review and analytics.",
-          "For partner identity, I implemented hybrid embedding and trigram matching with a fallback path, and used distributed locking to reduce duplicate creation during concurrent processing. Organization-scoped data access kept queries tied to the appropriate workspace.",
-        ],
-        points: [
-          "Developed lifecycle filters, pagination, renewal tracking, and handling for incomplete document dates.",
-          "Added reprocessing and clause-library rebuilding so downstream information can refresh without repeating the entire document workflow.",
-        ],
-      },
-      {
-        heading: "Outcome",
-        paragraphs: [
-          "The work connected document extraction with structured contract and partner records, giving business users a consistent interface for review, lifecycle tracking, and follow-up.",
-        ],
+        id: "delays",
+        title: "Payment delays",
+        chart: "villages",
+        finding: "Delayed-client counts were concentrated in a small number of villages.",
+        recommendation:
+          "Prioritize follow-up in high-volume locations and use delay-rate KPIs to compare performance relative to each location’s client base.",
+        note: "The chart ranks villages by delayed-client counts, not by delay rate.",
       },
     ],
   },
   {
     id: "samvid-admin-portal",
-    index: "02",
+    index: "03",
     title: "Samvid Admin Portal",
-    type: "Internal platform",
-    summary:
-      "An internal operations console bringing service health, logs, performance signals, and alerts into one place.",
-    highlights: [
-      "Built service-health views, a topology overview, and CloudWatch log access.",
-      "Developed email and SMS alerting with history, routing, snooze, and deduplication.",
-      "Implemented adaptive Lambda performance baselines and operational analytics.",
+    type: "Internal Platform · Samvid",
+    companyUrl: samvidUrl,
+    problem: "The team needed a shared place to review service health and respond when behavior looked abnormal.",
+    outcome: "Delivered an internal console for service status, investigation, and alert handling.",
+    contributions: [
+      "Built the service-health and alert views.",
+      "Added alert history and a way to hold repeat notices.",
+      "Surfaced unusual latency against recent service behavior.",
     ],
-    tags: ["Next.js", "TypeScript", "AWS CloudWatch", "PostgreSQL", "Redis", "Docker"],
-    emphasis: "second",
+    tags: ["TypeScript", "Next.js", "PostgreSQL", "AWS", "CloudWatch"],
+    emphasis: "standard",
     visual: "admin",
-    sections: [
-      {
-        heading: "Problem",
-        paragraphs: [
-          "Operating an AI application involves multiple services, logs, and performance signals. The team needed a shared view of system health and a practical way to investigate slow or failing components.",
-        ],
-      },
-      {
-        heading: "My Contribution",
-        paragraphs: [
-          "I developed the dashboard from an early tools interface into an internal monitoring and operations console.",
-          "My work included health pages, the service topology, log access, alerting, performance baselines, and analytics.",
-        ],
-      },
-      {
-        heading: "Approach",
-        paragraphs: [
-          "I brought CloudWatch logs and Lambda metrics into service-specific views and connected them to a topology overview. Redis caching reduced repeated health and log lookups.",
-          "I added email and SMS notifications, then developed alert history, snooze, routing, and deduplication so alerts are easier to use day to day. Lambda baselines use historical CloudWatch data instead of relying only on fixed duration thresholds.",
-        ],
-        points: [
-          "Worked on access controls, rate limiting, input handling, and anonymized chat-history views for operational investigation.",
-        ],
-      },
-      {
-        heading: "Outcome",
-        paragraphs: [
-          "The portal brought monitoring and investigation into a shared internal interface, helping the team review health, inspect logs, and respond to abnormal service behavior.",
-        ],
-      },
-    ],
+    overview: "An internal operations console that brings service health, investigation, and alerts into one place.",
+    role: "Individual contributor on Samvid’s product team.",
+    technical: "A Next.js console backed by PostgreSQL, reading AWS service metrics and logs.",
   },
   {
     id: "esg-research-assistant",
-    index: "03",
+    index: "04",
     title: "ESG Research Assistant",
-    type: "Graduate practicum · Armanino",
-    summary:
-      "A graduate team project exploring source-grounded answers across corporate sustainability reports.",
-    highlights: [
-      "Developed ingestion, retrieval, and synthesis workflows for multi-report research.",
-      "Compared retrieval-augmented generation with a non-RAG baseline.",
-      "Evaluated answers using sponsor-provided questions and traceable source references.",
+    type: "Graduate Practicum · Armanino",
+    problem:
+      "Comparing sustainability reports depends on finding the relevant passages and keeping each answer tied to its source.",
+    outcome: "The practicum team delivered a retrieval-based research workflow and evaluation findings for the sponsor.",
+    contributions: [
+      "Led technical implementation on a four-person graduate practicum team.",
+      "Built ingestion, semantic retrieval, and cross-report synthesis in Python.",
+      "Compared a retrieval-augmented workflow with a non-RAG baseline using sponsor-provided questions.",
     ],
-    tags: ["Python", "OpenAI", "Pinecone", "RAG"],
-    emphasis: "support",
+    tags: ["Python", "OpenAI", "Pinecone", "RAG", "Streamlit"],
+    emphasis: "standard",
     visual: "esg",
-    sections: [
-      {
-        heading: "Problem",
-        paragraphs: [
-          "Sustainability research requires finding and comparing information across lengthy reports. An answer is more useful when a reviewer can trace it to the supporting passage and understand differences between reports.",
-        ],
-      },
-      {
-        heading: "My Contribution",
-        paragraphs: [
-          "As part of a four-person graduate practicum team, I led technical implementation of the AI-assisted research workflow.",
-          "I worked on ingestion, retrieval, synthesis, and evaluation using Python, OpenAI, and Pinecone.",
-        ],
-      },
-      {
-        heading: "Approach",
-        paragraphs: [
-          "We used automotive ESG reports and sponsor-provided questions to compare a retrieval-augmented workflow with a non-RAG baseline.",
-          "The retrieval workflow supplied relevant report context to the model and supported answers with source references. Evaluation examined the answers and cross-report inconsistencies.",
-        ],
-      },
-      {
-        heading: "Outcome",
-        paragraphs: [
-          "The team delivered a repeatable research workflow and evaluation findings for the sponsor, connecting multi-document retrieval with answers that could be reviewed against their sources.",
-        ],
-      },
-    ],
+    overview:
+      "A graduate practicum for Armanino exploring source-grounded answers across automotive sustainability reports.",
+    role: "Technical lead on a four-person graduate practicum team.",
+    technical:
+      "Python and Streamlit, with OpenAI embeddings and models and Pinecone retrieval over the reports; answers are organized by source document.",
+  },
+]
+
+export const recognition = [
+  { title: "Second Place", event: "SCU Spring Analytics Showdown", year: "2025" },
+  {
+    title: "Judge",
+    event: "Bay Area Data Science Competition",
+    year: "2026",
+    url: "https://www.linkedin.com/posts/we-just-wrapped-up-our-first-ever-av-data-ugcPost-7448433684770095104-aV1O/",
+    linkLabel: "Event post",
   },
 ]
 
@@ -217,6 +213,7 @@ export const experience = [
     when: "July 2025–Present",
     place: "Pleasanton, California",
     detail: "Contract intelligence workflows and internal operational tools.",
+    url: samvidUrl,
   },
   {
     org: "Armanino LLP",
@@ -250,22 +247,11 @@ export const education = [
 export const additionalWork = [
   {
     title: "Impact Analysis Tool",
-    when: "2025",
+    when: "School project · 2025",
+    url: "https://github.com/henry-xrk/ISBA2411_NLP_Final_Project",
+    linkLabel: "GitHub",
     detail:
       "Built a multi-document application comparing sustainability reports with ISSB and SASB standards through semantic retrieval, cross-document synthesis, contradiction analysis, and exportable reports.",
-    tags: ["Python", "PostgreSQL", "pgvector", "LLMs", "Streamlit", "Docker"],
-  },
-  {
-    title: "SCU Spring Analytics Showdown",
-    when: "Second place, 2025",
-    detail:
-      "Led a four-person team analyzing PostgreSQL data and presenting Tableau findings on payment delays, client disengagement, and regional performance.",
-  },
-  {
-    title: "Bay Area Data Science Competition",
-    when: "Judge, 2026",
-    detail:
-      "Evaluated finalist projects on problem definition, data use, analysis, interpretation, and proposed solutions, and contributed technical questions and award selection.",
   },
   {
     title: "U.S. Candy Distribution Dashboard",
@@ -277,7 +263,7 @@ export const additionalWork = [
 export const about = {
   heading: "Business questions, answered with data and software.",
   paragraphs: [
-    "I connect business questions with the data and software needed to answer them. At Samvid, I build contract intelligence workflows and internal tools using TypeScript, SQL, PostgreSQL, and AWS. My work includes document processing, entity matching, lifecycle analytics, and service monitoring.",
+    "At Samvid, I build contract intelligence workflows and internal tools using TypeScript, Next.js, SQL, PostgreSQL, and AWS. The work spans document processing, partner matching, lifecycle analytics, and service monitoring.",
     "I earned an M.S. in Business Analytics from Santa Clara University and a B.S. in Business Intelligence and Data Analytics from the University of Macau. My graduate work used Python and retrieval-augmented generation to explore questions across sustainability reports.",
   ],
   skills: [

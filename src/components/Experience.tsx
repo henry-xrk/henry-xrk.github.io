@@ -1,4 +1,5 @@
 import { experience } from "../data/portfolio"
+import { CompanyLink } from "./CompanyLink"
 
 export function Experience() {
   return (
@@ -18,6 +19,7 @@ export function Experience() {
                 <p className="timeline-detail">
                   {item.place}. {item.detail}
                 </p>
+                {item.url ? <CompanyLink href={item.url} /> : null}
               </div>
             </li>
           ))}

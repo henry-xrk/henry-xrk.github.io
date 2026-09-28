@@ -1,6 +1,10 @@
 import { useEffect, useId, useRef } from "react"
 import type { MouseEvent } from "react"
 import type { Project } from "../data/portfolio"
+import { charts } from "../data/showdown"
+import { ChartFigure } from "./ChartFigure"
+import { CompanyLink } from "./CompanyLink"
+import { ProjectSketch } from "./sketches"
 
 type Props = {
   project: Project
@@ -22,24 +26,21 @@ export function CaseStudyDialog({ project, onClose }: Props) {
     if (!dialog) return
     let ignoreClose = false
     if (!dialog.open) dialog.showModal()
-    headingRef.current?.focus()
+    dialog.scrollTop = 0
+    headingRef.current?.focus({ preventScroll: true })
     const previousOverflow = document.body.style.overflow
     document.body.style.overflow = "hidden"
 
     const handleClose = () => {
       if (!ignoreClose) onCloseRef.current()
     }
-    const onKey = (event: globalThis.KeyboardEvent) => {
-      if (event.key === "Escape") onCloseRef.current()
-    }
     dialog.addEventListener("close", handleClose)
-    document.addEventListener("keydown", onKey)
 
     return () => {
       ignoreClose = true
-      document.body.style.overflow = previousOverflow
       dialog.removeEventListener("close", handleClose)
-      document.removeEventListener("keydown", onKey)
+      if (dialog.open) dialog.close()
+      document.body.style.overflow = previousOverflow
     }
   }, [project.id])
 
@@ -48,6 +49,7 @@ export function CaseStudyDialog({ project, onClose }: Props) {
   }
 
   function onDialogClick(event: MouseEvent<HTMLDialogElement>) {
+    if (event.target !== event.currentTarget) return
     const rect = event.currentTarget.getBoundingClientRect()
     const inside =
       event.clientX >= rect.left &&
@@ -74,30 +76,73 @@ export function CaseStudyDialog({ project, onClose }: Props) {
           <h2 id={titleId} ref={headingRef} tabIndex={-1}>
             {project.title}
           </h2>
+          {project.companyUrl ? <CompanyLink href={project.companyUrl} /> : null}
         </div>
         <button type="button" className="dialog-close" onClick={requestClose}>
           Close
         </button>
       </div>
-      {project.sections.map((section) => {
-        const hasPoints = (section.points?.length ?? 0) > 0
-        if (section.paragraphs.length === 0 && !hasPoints) return null
-        return (
-          <section key={section.heading} className="dialog-section">
-            <h3>{section.heading}</h3>
-            {section.paragraphs.map((paragraph) => (
-              <p key={paragraph}>{paragraph}</p>
+
+      <p className="dialog-overview">{project.overview}</p>
+
+      <dl className="dialog-facts">
+        <div>
+          <dt>My role</dt>
+          <dd>{project.role}</dd>
+        </div>
+        <div>
+          <dt>Problem</dt>
+          <dd>{project.problem}</dd>
+        </div>
+      </dl>
+
+      <section className="dialog-section">
+        <h3>My contribution</h3>
+        <ul className="highlights">
+          {project.contributions.map((item) => (
+            <li key={item}>{item}</li>
+          ))}
+        </ul>
+      </section>
+
+      <section className="dialog-section">
+        <h3>Outcome</h3>
+        <p>{project.outcome}</p>
+      </section>
+
+      {project.findings ? (
+        <section className="dialog-section">
+          <h3>Team findings and recommendations</h3>
+          <ol className="finding-list">
+            {project.findings.map((item) => (
+              <li key={item.id}>
+                <ChartFigure title={item.title} chart={charts[item.chart]}>
+                  {item.note ? <p className="chart-note">{item.note}</p> : null}
+                </ChartFigure>
+                <dl className="finding-text">
+                  <div>
+                    <dt>Finding</dt>
+                    <dd>{item.finding}</dd>
+                  </div>
+                  <div>
+                    <dt>Recommendation</dt>
+                    <dd>{item.recommendation}</dd>
+                  </div>
+                </dl>
+              </li>
             ))}
-            {hasPoints ? (
-              <ul className="highlights">
-                {section.points?.map((point) => (
-                  <li key={point}>{point}</li>
-                ))}
-              </ul>
-            ) : null}
-          </section>
-        )
-      })}
+          </ol>
+        </section>
+      ) : (
+        <section className="dialog-section dialog-visual">
+          <ProjectSketch visual={project.visual} />
+        </section>
+      )}
+
+      <details className="dialog-details">
+        <summary>Technical details</summary>
+        <p>{project.technical}</p>
+      </details>
     </dialog>
   )
 }

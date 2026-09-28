@@ -1,6 +1,7 @@
 import { motion } from "motion/react"
 import { about, additionalWork, education } from "../data/portfolio"
 import { useMediaQuery } from "../hooks/useMediaQuery"
+import { ExternalLink } from "./CompanyLink"
 
 const ease = [0.22, 1, 0.36, 1] as const
 
@@ -53,6 +54,7 @@ export function About() {
                   <span>{item.when}</span>
                 </p>
                 <p>{item.detail}</p>
+                {item.url ? <ExternalLink href={item.url} label={item.linkLabel ?? "Link"} /> : null}
               </li>
             ))}
           </ul>

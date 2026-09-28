@@ -3,6 +3,7 @@ import { Contact } from "./components/Contact"
 import { Experience } from "./components/Experience"
 import { Hero } from "./components/Hero"
 import { ProjectShowcase } from "./components/ProjectShowcase"
+import { Recognition } from "./components/Recognition"
 import { SiteHeader } from "./components/SiteHeader"
 
 export function App() {
@@ -15,6 +16,7 @@ export function App() {
       <main>
         <Hero />
         <ProjectShowcase />
+        <Recognition />
         <Experience />
         <About />
         <Contact />

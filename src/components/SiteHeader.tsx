@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { profile } from "../data/portfolio"
+import { contactLinks, profile } from "../data/portfolio"
 import { cx } from "../lib/cx"
 import { ThemeToggle } from "./ThemeToggle"
 
@@ -23,6 +23,9 @@ export function SiteHeader() {
         <nav className="site-nav" aria-label="Primary">
           <a href="#work">Work</a>
           <a href="#about">About</a>
+          <a href={contactLinks.resume} target="_blank" rel="noreferrer noopener">
+            Resume
+          </a>
           <a href="#contact">Contact</a>
         </nav>
       </div>

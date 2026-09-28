@@ -5,6 +5,7 @@ import type { Project } from "../data/portfolio"
 import { useMediaQuery } from "../hooks/useMediaQuery"
 import { cx } from "../lib/cx"
 import { CaseStudyDialog } from "./CaseStudyDialog"
+import { CompanyLink } from "./CompanyLink"
 import { ProjectSketch } from "./sketches"
 
 const ease = [0.22, 1, 0.36, 1] as const
@@ -20,12 +21,8 @@ export function ProjectShowcase() {
     if (activeId !== null || !pendingFocus.current) return
     const id = pendingFocus.current
     pendingFocus.current = null
-    triggers.current.get(id)?.focus()
+    triggers.current.get(id)?.focus({ preventScroll: true })
   }, [activeId])
-
-  function open(id: string) {
-    setActiveId(id)
-  }
 
   function close() {
     setActiveId((current) => {
@@ -42,12 +39,13 @@ export function ProjectShowcase() {
           <h2>Selected projects</h2>
         </header>
         <div className="case-list">
-          {projects.map((project) => (
+          {projects.map((project, index) => (
             <CaseArticle
               key={project.id}
               project={project}
+              flipped={project.emphasis !== "lead" && index % 2 === 1}
               reduced={reduced}
-              onOpen={() => open(project.id)}
+              onOpen={() => setActiveId(project.id)}
               setTrigger={(node) => {
                 if (node) triggers.current.set(project.id, node)
                 else triggers.current.delete(project.id)
@@ -63,18 +61,20 @@ export function ProjectShowcase() {
 
 function CaseArticle({
   project,
+  flipped,
   reduced,
   onOpen,
   setTrigger,
 }: {
   project: Project
+  flipped: boolean
   reduced: boolean
   onOpen: () => void
   setTrigger: (node: HTMLButtonElement | null) => void
 }) {
   return (
     <motion.article
-      className={cx("case", `case-${project.emphasis}`)}
+      className={cx("case", `case-${project.emphasis}`, flipped && "is-flipped")}
       initial={reduced ? false : { opacity: 0, y: 28 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "0px 0px -8% 0px" }}
@@ -87,13 +87,23 @@ function CaseArticle({
         <p className="case-index">{project.index}</p>
         <p className="case-type">{project.type}</p>
         <h3>{project.title}</h3>
-        <p className="case-summary">{project.summary}</p>
+        {project.companyUrl ? <CompanyLink href={project.companyUrl} /> : null}
+        <dl className="case-facts">
+          <div>
+            <dt>Problem</dt>
+            <dd>{project.problem}</dd>
+          </div>
+          <div className="is-outcome">
+            <dt>Outcome</dt>
+            <dd>{project.outcome}</dd>
+          </div>
+        </dl>
         <ul className="highlights">
-          {project.highlights.map((item) => (
+          {project.contributions.map((item) => (
             <li key={item}>{item}</li>
           ))}
         </ul>
-        <ul className="tags">
+        <ul className="tags" aria-label="Tools">
           {project.tags.map((tag) => (
             <li key={tag}>{tag}</li>
           ))}
