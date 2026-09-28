@@ -41,11 +41,11 @@ export function Hero() {
           </motion.p>
           <motion.div className="actions" {...rise(0.34)}>
             <a className="button button-primary" href="#work">
-              View My Work
+              View my work
               <Arrow />
             </a>
             <a className="button" href="#about">
-              About Me
+              About me
             </a>
           </motion.div>
           <motion.p className="location" {...rise(0.42)}>

@@ -25,7 +25,7 @@ export const profile = {
   eyebrow: "Data · Analytics · Applied AI",
   headline: "Turning complex data into useful products.",
   introduction:
-    "I’m a Business Intelligence Analyst building data workflows, AI-powered applications, and tools that make complex information easier to use.",
+    "I’m Rongkai, a Business Intelligence Analyst building data workflows, AI-powered applications, and tools that help people work with complex information. My work spans contract intelligence, operational analytics, and retrieval-based research.",
   location: "San Francisco Bay Area",
 }
 
@@ -72,39 +72,47 @@ export const projects: Project[] = [
     id: "contract-intelligence",
     index: "01",
     title: "Contract Intelligence",
-    type: "Professional Work · Samvid",
+    type: "Professional work · Samvid",
     summary:
-      "Turning unstructured contracts into structured information for search, review, and renewal workflows.",
+      "Turning unstructured contracts into connected data for review, partner analysis, and renewal tracking.",
     highlights: [
-      "Extracts contract information into structured storage.",
-      "Matches entities to reduce duplicate party records.",
-      "Processes the work asynchronously, in an interface for business users.",
+      "Built structured extraction and hybrid entity matching for contract and partner records.",
+      "Moved processing into asynchronous AWS workflows and added reprocessing capabilities.",
+      "Developed lifecycle views, filters, and partner dashboards around the resulting data.",
     ],
-    tags: ["TypeScript", "SQL", "PostgreSQL", "AWS", "LLMs", "Embeddings"],
+    tags: ["TypeScript", "Next.js", "PostgreSQL", "AWS Lambda", "Step Functions", "Redis", "LLMs", "Embeddings"],
     emphasis: "lead",
     visual: "contract",
     sections: [
       {
-        heading: "Overview",
+        heading: "Problem",
         paragraphs: [
-          "Contract Intelligence turns unstructured contracts into structured information for search, review, and renewal workflows.",
-          "The work covers extraction into structured storage, entity matching so the same party is less likely to be stored twice, and an interface for the people reviewing the result. Processing runs asynchronously.",
+          "Contract data needs to support search, review, and renewal decisions, but the useful fields begin inside documents. Variations in partner names and incomplete dates make consistent reporting harder.",
+          "Processing also needs to continue without blocking the web interface.",
         ],
       },
       {
         heading: "My Contribution",
         paragraphs: [
-          "I contributed as a Business Intelligence Analyst at Samvid. My work involved TypeScript, SQL, PostgreSQL, and AWS, and the applied integration of LLMs and embeddings.",
-          "This was not a solo build, and it is not an open-source project.",
+          "I built and iterated on the extraction workflow, partner matching, persistence layer, and the interfaces used to review the results.",
+          "My work connected backend processing with Contract Intelligence, Partner 360, and renewal views.",
         ],
       },
       {
         heading: "Approach",
-        paragraphs: [],
+        paragraphs: [
+          "Extraction moved from an in-process flow into asynchronous Lambda execution, and later into Step Functions batch orchestration. The path is document ingestion, asynchronous orchestration, extraction and matching, PostgreSQL, then review and analytics.",
+          "For partner identity, I implemented hybrid embedding and trigram matching with a fallback path, and used distributed locking to reduce duplicate creation during concurrent processing. Organization-scoped data access kept queries tied to the appropriate workspace.",
+        ],
         points: [
-          "Extract contract information and keep it in structured storage.",
-          "Match entities to reduce duplicate party records.",
-          "Process the work asynchronously and present it for business users.",
+          "Developed lifecycle filters, pagination, renewal tracking, and handling for incomplete document dates.",
+          "Added reprocessing and clause-library rebuilding so downstream information can refresh without repeating the entire document workflow.",
+        ],
+      },
+      {
+        heading: "Outcome",
+        paragraphs: [
+          "The work connected document extraction with structured contract and partner records, giving business users a consistent interface for review, lifecycle tracking, and follow-up.",
         ],
       },
     ],
@@ -113,39 +121,45 @@ export const projects: Project[] = [
     id: "samvid-admin-portal",
     index: "02",
     title: "Samvid Admin Portal",
-    type: "Internal Platform · Samvid",
+    type: "Internal platform",
     summary:
-      "Bringing service health, logs, alerts, and operational analytics into one interface.",
+      "An internal operations console bringing service health, logs, performance signals, and alerts into one place.",
     highlights: [
-      "Brings service status and logs into one view.",
-      "Surfaces alerts and performance monitoring.",
-      "Turns scattered system information into an interface people can act on.",
+      "Built service-health views, a topology overview, and CloudWatch log access.",
+      "Developed email and SMS alerting with history, routing, snooze, and deduplication.",
+      "Implemented adaptive Lambda performance baselines and operational analytics.",
     ],
-    tags: ["Next.js", "TypeScript", "AWS CloudWatch", "PostgreSQL"],
+    tags: ["Next.js", "TypeScript", "AWS CloudWatch", "PostgreSQL", "Redis", "Docker"],
     emphasis: "second",
     visual: "admin",
     sections: [
       {
-        heading: "Overview",
+        heading: "Problem",
         paragraphs: [
-          "The Samvid Admin Portal brings service health, logs, alerts, and operational analytics into one interface.",
-          "Information that lived across systems is organized so it can be reviewed and acted on in one place.",
+          "Operating an AI application involves multiple services, logs, and performance signals. The team needed a shared view of system health and a practical way to investigate slow or failing components.",
         ],
       },
       {
         heading: "My Contribution",
         paragraphs: [
-          "I worked on this internal platform at Samvid with Next.js, TypeScript, AWS CloudWatch, and PostgreSQL.",
-          "It is an internal tool, not an open-source project.",
+          "I developed the dashboard from an early tools interface into an internal monitoring and operations console.",
+          "My work included health pages, the service topology, log access, alerting, performance baselines, and analytics.",
         ],
       },
       {
         heading: "Approach",
-        paragraphs: [],
+        paragraphs: [
+          "I brought CloudWatch logs and Lambda metrics into service-specific views and connected them to a topology overview. Redis caching reduced repeated health and log lookups.",
+          "I added email and SMS notifications, then developed alert history, snooze, routing, and deduplication so alerts are easier to use day to day. Lambda baselines use historical CloudWatch data instead of relying only on fixed duration thresholds.",
+        ],
         points: [
-          "Bring service status and logs into one view.",
-          "Surface alerts and performance monitoring.",
-          "Organize operational information into an interface people can act on.",
+          "Worked on access controls, rate limiting, input handling, and anonymized chat-history views for operational investigation.",
+        ],
+      },
+      {
+        heading: "Outcome",
+        paragraphs: [
+          "The portal brought monitoring and investigation into a shared internal interface, helping the team review health, inspect logs, and respond to abnormal service behavior.",
         ],
       },
     ],
@@ -154,74 +168,141 @@ export const projects: Project[] = [
     id: "esg-research-assistant",
     index: "03",
     title: "ESG Research Assistant",
-    type: "Graduate Practicum · Armanino",
+    type: "Graduate practicum · Armanino",
     summary:
-      "Exploring retrieval-augmented generation for questions about sustainability reporting.",
+      "A graduate team project exploring source-grounded answers across corporate sustainability reports.",
     highlights: [
-      "A graduate team project, not a solo product build.",
-      "Compares a direct model answer with a path that retrieves context first.",
-      "Uses ESG reports and test questions to examine retrieval and answers.",
+      "Developed ingestion, retrieval, and synthesis workflows for multi-report research.",
+      "Compared retrieval-augmented generation with a non-RAG baseline.",
+      "Evaluated answers using sponsor-provided questions and traceable source references.",
     ],
-    tags: ["Python", "Retrieval-augmented generation"],
+    tags: ["Python", "OpenAI", "Pinecone", "RAG"],
     emphasis: "support",
     visual: "esg",
     sections: [
       {
-        heading: "Overview",
+        heading: "Problem",
         paragraphs: [
-          "ESG Research Assistant was a graduate practicum with Armanino. The team explored retrieval-augmented generation for questions about sustainability reporting.",
-          "The same kind of question is asked on two paths. A baseline path sends it to a model. A RAG path retrieves context before the model answers.",
+          "Sustainability research requires finding and comparing information across lengthy reports. An answer is more useful when a reviewer can trace it to the supporting passage and understand differences between reports.",
         ],
       },
       {
         heading: "My Contribution",
         paragraphs: [
-          "I contributed as part of the graduate team. Python was used for this project. It is not the main language of my work at Samvid.",
+          "As part of a four-person graduate practicum team, I led technical implementation of the AI-assisted research workflow.",
+          "I worked on ingestion, retrieval, synthesis, and evaluation using Python, OpenAI, and Pinecone.",
         ],
       },
       {
         heading: "Approach",
         paragraphs: [
-          "ESG reports and test questions were used to look at retrieval and answer quality. This page does not report scores or other evaluation metrics.",
+          "We used automotive ESG reports and sponsor-provided questions to compare a retrieval-augmented workflow with a non-RAG baseline.",
+          "The retrieval workflow supplied relevant report context to the model and supported answers with source references. Evaluation examined the answers and cross-report inconsistencies.",
         ],
-        points: [
-          "Baseline: Question → LLM → Answer.",
-          "RAG: Question → Retrieve context → LLM → Answer.",
+      },
+      {
+        heading: "Outcome",
+        paragraphs: [
+          "The team delivered a repeatable research workflow and evaluation findings for the sponsor, connecting multi-document retrieval with answers that could be reviewed against their sources.",
         ],
       },
     ],
   },
 ]
 
+export const experience = [
+  {
+    org: "Samvid Inc.",
+    role: "Business Intelligence Analyst",
+    when: "July 2025–Present",
+    place: "Pleasanton, California",
+    detail: "Contract intelligence workflows and internal operational tools.",
+  },
+  {
+    org: "Armanino LLP",
+    role: "Applied AI Engineer, graduate practicum",
+    when: "February–June 2025",
+    place: "Practicum",
+    detail: "Technical implementation of a research workflow for sustainability reports.",
+  },
+  {
+    org: "MGM Macau",
+    role: "Digital and Technology Solutions Intern",
+    when: "July–August 2024",
+    place: "Macau",
+    detail: "Supported operational systems and Power BI reporting, and handled service incidents and requests.",
+  },
+]
+
+export const education = [
+  {
+    school: "Santa Clara University",
+    credential: "M.S. in Business Analytics",
+    when: "September 2024–December 2025",
+  },
+  {
+    school: "University of Macau",
+    credential: "B.S. in Business Intelligence and Data Analytics",
+    when: "August 2020–June 2024",
+  },
+]
+
+export const additionalWork = [
+  {
+    title: "Impact Analysis Tool",
+    when: "2025",
+    detail:
+      "Built a multi-document application comparing sustainability reports with ISSB and SASB standards through semantic retrieval, cross-document synthesis, contradiction analysis, and exportable reports.",
+    tags: ["Python", "PostgreSQL", "pgvector", "LLMs", "Streamlit", "Docker"],
+  },
+  {
+    title: "SCU Spring Analytics Showdown",
+    when: "Second place, 2025",
+    detail:
+      "Led a four-person team analyzing PostgreSQL data and presenting Tableau findings on payment delays, client disengagement, and regional performance.",
+  },
+  {
+    title: "Bay Area Data Science Competition",
+    when: "Judge, 2026",
+    detail:
+      "Evaluated finalist projects on problem definition, data use, analysis, interpretation, and proposed solutions, and contributed technical questions and award selection.",
+  },
+  {
+    title: "U.S. Candy Distribution Dashboard",
+    when: "2025",
+    detail: "Built a Tableau dashboard exploring sales, profitability, regional patterns, and seasonal effects.",
+  },
+]
+
 export const about = {
+  heading: "Business questions, answered with data and software.",
   paragraphs: [
-    "I work as a Business Intelligence Analyst at Samvid Inc. The day-to-day work uses TypeScript, SQL, PostgreSQL, and AWS.",
-    "I studied Business Analytics at Santa Clara University, after a bachelor’s background in Business Intelligence and Data Analytics at the University of Macau.",
-    "Python is the language I use for analysis and for graduate projects. It is not the main language of my work at Samvid.",
-  ],
-  roles: [
-    "Business Intelligence Analyst, Samvid Inc.",
-    "Business Analytics, Santa Clara University",
-    "Business Intelligence and Data Analytics, University of Macau",
+    "I connect business questions with the data and software needed to answer them. At Samvid, I build contract intelligence workflows and internal tools using TypeScript, SQL, PostgreSQL, and AWS. My work includes document processing, entity matching, lifecycle analytics, and service monitoring.",
+    "I earned an M.S. in Business Analytics from Santa Clara University and a B.S. in Business Intelligence and Data Analytics from the University of Macau. My graduate work used Python and retrieval-augmented generation to explore questions across sustainability reports.",
   ],
   skills: [
     {
-      title: "Data & Analytics",
-      text: "SQL and PostgreSQL, used to structure information and answer business questions.",
+      title: "Data and analytics",
+      text: "SQL, PostgreSQL, Python, Tableau, and Power BI for modeling, validation, lifecycle metrics, and visualization.",
     },
     {
-      title: "Application Development",
-      text: "TypeScript products and interfaces, including Next.js on the internal admin portal.",
+      title: "Applications and workflows",
+      text: "TypeScript, JavaScript, Next.js, REST APIs, and business interfaces around the data.",
     },
     {
-      title: "Cloud & Applied AI",
-      text: "AWS and CloudWatch, plus applied integration of LLMs and embeddings. Python for analysis and graduate work.",
+      title: "Cloud and operations",
+      text: "AWS Lambda, Step Functions, CloudWatch, Redis, and Docker.",
+    },
+    {
+      title: "Applied AI",
+      text: "LLM APIs, embeddings, entity resolution, semantic search, retrieval-augmented generation, and evaluation.",
     },
   ],
 }
 
 export const contact = {
   heading: "Let’s build something useful.",
+  lede: "I’m interested in opportunities where data, analytics, and applied AI meet real business needs.",
 }
 
 export function visibleContactLinks(): Array<{ href: string; label: string }> {

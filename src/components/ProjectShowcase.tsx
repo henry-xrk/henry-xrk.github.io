@@ -38,8 +38,8 @@ export function ProjectShowcase() {
     <section id="work" className="work">
       <div className="wrap">
         <header className="section-intro">
-          <p className="eyebrow">Selected work</p>
-          <h2>Three projects, with the contribution in view.</h2>
+          <p className="eyebrow">Work</p>
+          <h2>Selected projects</h2>
         </header>
         <div className="case-list">
           {projects.map((project) => (

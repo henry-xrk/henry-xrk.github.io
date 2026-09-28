@@ -8,6 +8,7 @@ export function Contact() {
       <div className="wrap">
         <p className="eyebrow">Contact</p>
         <h2>{contact.heading}</h2>
+        <p className="contact-lede">{contact.lede}</p>
         <ul className="contact-links">
           {links.map((link) => (
             <li key={link.label}>

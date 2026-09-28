@@ -10,6 +10,24 @@
     />
     <meta name="theme-color" content="#0e1114" />
     <title>Rongkai Xu — Data, Analytics &amp; Applied AI</title>
+    <script>
+      ;(function () {
+        var mode = "system"
+        try {
+          var stored = localStorage.getItem("theme")
+          if (stored === "light" || stored === "dark" || stored === "system") mode = stored
+        } catch (error) {}
+        var dark = false
+        try {
+          dark = window.matchMedia("(prefers-color-scheme: dark)").matches
+        } catch (error) {}
+        var resolved = mode === "system" ? (dark ? "dark" : "light") : mode
+        document.documentElement.dataset.theme = resolved
+        document.documentElement.dataset.themeMode = mode
+        var themeColor = document.querySelector('meta[name="theme-color"]')
+        if (themeColor) themeColor.setAttribute("content", resolved === "dark" ? "#0e1114" : "#f4f0e6")
+      })()
+    </script>
   </head>
   <body>
     <div id="root"></div>

@@ -29,14 +29,23 @@ export function CaseStudyDialog({ project, onClose }: Props) {
     const handleClose = () => {
       if (!ignoreClose) onCloseRef.current()
     }
+    const onKey = (event: globalThis.KeyboardEvent) => {
+      if (event.key === "Escape") onCloseRef.current()
+    }
     dialog.addEventListener("close", handleClose)
+    document.addEventListener("keydown", onKey)
 
     return () => {
       ignoreClose = true
       document.body.style.overflow = previousOverflow
       dialog.removeEventListener("close", handleClose)
+      document.removeEventListener("keydown", onKey)
     }
   }, [project.id])
+
+  function requestClose() {
+    onCloseRef.current()
+  }
 
   function onDialogClick(event: MouseEvent<HTMLDialogElement>) {
     const rect = event.currentTarget.getBoundingClientRect()
@@ -45,11 +54,20 @@ export function CaseStudyDialog({ project, onClose }: Props) {
       event.clientX <= rect.right &&
       event.clientY >= rect.top &&
       event.clientY <= rect.bottom
-    if (!inside) event.currentTarget.close()
+    if (!inside) requestClose()
   }
 
   return (
-    <dialog ref={dialogRef} className="case-dialog" aria-labelledby={titleId} onClick={onDialogClick}>
+    <dialog
+      ref={dialogRef}
+      className="case-dialog"
+      aria-labelledby={titleId}
+      onClick={onDialogClick}
+      onCancel={(event) => {
+        event.preventDefault()
+        requestClose()
+      }}
+    >
       <div className="dialog-top">
         <div>
           <p className="case-type">{project.type}</p>
@@ -57,7 +75,7 @@ export function CaseStudyDialog({ project, onClose }: Props) {
             {project.title}
           </h2>
         </div>
-        <button type="button" className="dialog-close" onClick={() => dialogRef.current?.close()}>
+        <button type="button" className="dialog-close" onClick={requestClose}>
           Close
         </button>
       </div>

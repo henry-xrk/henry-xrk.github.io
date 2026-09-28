@@ -145,3 +145,10 @@ vite.config.ts.timestamp-*
 
 .DS_Store
 /references/
+
+# Local content references. Keep these off the public site and out of git.
+*.docx
+*Confidential*
+*Job-Record*
+*Portal-Record*
+CONTENT_TODO.md
