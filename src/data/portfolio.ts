@@ -31,7 +31,7 @@ export const profile = {
 
 export const contactLinks = {
   github: "https://github.com/henry-xrk",
-  email: "rongkai918@gmail.com",
+  email: "rongkaixu918@gmail.com",
   linkedin: "https://www.linkedin.com/in/rongkai-henry-xu/",
   resume: "",
 }
