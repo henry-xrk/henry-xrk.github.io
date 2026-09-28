@@ -1,0 +1,110 @@
+import { motion } from "motion/react"
+import { useEffect, useRef, useState } from "react"
+import { projects } from "../data/portfolio"
+import type { Project } from "../data/portfolio"
+import { useMediaQuery } from "../hooks/useMediaQuery"
+import { cx } from "../lib/cx"
+import { CaseStudyDialog } from "./CaseStudyDialog"
+import { ProjectSketch } from "./sketches"
+
+const ease = [0.22, 1, 0.36, 1] as const
+
+export function ProjectShowcase() {
+  const reduced = useMediaQuery("(prefers-reduced-motion: reduce)")
+  const [activeId, setActiveId] = useState<string | null>(null)
+  const triggers = useRef(new Map<string, HTMLButtonElement>())
+  const pendingFocus = useRef<string | null>(null)
+  const active = projects.find((project) => project.id === activeId) ?? null
+
+  useEffect(() => {
+    if (activeId !== null || !pendingFocus.current) return
+    const id = pendingFocus.current
+    pendingFocus.current = null
+    triggers.current.get(id)?.focus()
+  }, [activeId])
+
+  function open(id: string) {
+    setActiveId(id)
+  }
+
+  function close() {
+    setActiveId((current) => {
+      pendingFocus.current = current
+      return null
+    })
+  }
+
+  return (
+    <section id="work" className="work">
+      <div className="wrap">
+        <header className="section-intro">
+          <p className="eyebrow">Selected work</p>
+          <h2>Three projects, with the contribution in view.</h2>
+        </header>
+        <div className="case-list">
+          {projects.map((project) => (
+            <CaseArticle
+              key={project.id}
+              project={project}
+              reduced={reduced}
+              onOpen={() => open(project.id)}
+              setTrigger={(node) => {
+                if (node) triggers.current.set(project.id, node)
+                else triggers.current.delete(project.id)
+              }}
+            />
+          ))}
+        </div>
+      </div>
+      {active ? <CaseStudyDialog project={active} onClose={close} /> : null}
+    </section>
+  )
+}
+
+function CaseArticle({
+  project,
+  reduced,
+  onOpen,
+  setTrigger,
+}: {
+  project: Project
+  reduced: boolean
+  onOpen: () => void
+  setTrigger: (node: HTMLButtonElement | null) => void
+}) {
+  return (
+    <motion.article
+      className={cx("case", `case-${project.emphasis}`)}
+      initial={reduced ? false : { opacity: 0, y: 28 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "0px 0px -8% 0px" }}
+      transition={{ duration: reduced ? 0 : 0.65, ease }}
+    >
+      <div className="case-visual">
+        <ProjectSketch visual={project.visual} />
+      </div>
+      <div className="case-copy">
+        <p className="case-index">{project.index}</p>
+        <p className="case-type">{project.type}</p>
+        <h3>{project.title}</h3>
+        <p className="case-summary">{project.summary}</p>
+        <ul className="highlights">
+          {project.highlights.map((item) => (
+            <li key={item}>{item}</li>
+          ))}
+        </ul>
+        <ul className="tags">
+          {project.tags.map((tag) => (
+            <li key={tag}>{tag}</li>
+          ))}
+        </ul>
+        <button type="button" className="text-button" onClick={onOpen} ref={setTrigger}>
+          View Case Study
+          <svg className="arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
+            <path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" strokeWidth="1.4" />
+          </svg>
+        </button>
+      </div>
+    </motion.article>
+  )
+}
