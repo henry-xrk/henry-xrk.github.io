@@ -1,6 +1,10 @@
-import type { ChartId } from "./showdown"
+import profilePhoto from "../assets/about/rongkai-xu.jpg"
+import impactAgent from "../assets/impact/impact-agent.jpg"
+import impactDashboard from "../assets/impact/impact-dashboard.jpg"
+import impactExtraction from "../assets/impact/impact-extraction.jpg"
+import type { Chart, ChartId } from "./showdown"
 
-export type ProjectVisual = "contract" | "admin" | "esg" | "showdown"
+export type ProjectVisual = "contract" | "admin" | "impact" | "showdown"
 
 export type Finding = {
   id: string
@@ -17,6 +21,11 @@ export type Project = {
   title: string
   type: string
   companyUrl?: string
+  repoUrl?: string
+  summary: string
+  result: string
+  metrics?: Array<{ value: string; label: string }>
+  cardPoints: string[]
   problem: string
   outcome: string
   contributions: string[]
@@ -27,15 +36,16 @@ export type Project = {
   role: string
   technical: string
   findings?: Finding[]
+  screens?: Array<{ title: string; note?: string; chart: Chart }>
 }
 
 export const profile = {
   name: "Rongkai Xu",
   mark: "RX",
   eyebrow: "Data · Analytics Engineering · Applied AI",
-  headline: "Connecting business questions, data workflows, and products people can use.",
+  headline: "Turning complex data into useful products.",
   introduction:
-    "I work where analysis and the software around it meet: SQL and PostgreSQL data work, TypeScript products, and applied AI. Recent projects cover contract intelligence, operational analytics, and retrieval-based research.",
+    "I work between business analysis and data products: framing the question, shaping the data, and building the views people use to decide. Recent work spans contract intelligence, operational monitoring, and competition analytics.",
   location: "San Francisco Bay Area",
 }
 
@@ -86,6 +96,16 @@ export const projects: Project[] = [
     title: "Contract Intelligence",
     type: "Professional Work · Samvid",
     companyUrl: samvidUrl,
+    summary: "Turns contract documents into structured records for review, partner analysis, and renewal tracking.",
+    result: "Delivered an end-to-end workflow: field extraction, partner matching, and renewal views.",
+    metrics: [
+      { value: "1,000+", label: "agreements" },
+      { value: "Under 3 min", label: "extraction time, down from about 30 minutes" },
+    ],
+    cardPoints: [
+      "Built the path from documents to structured contract and partner records.",
+      "Moved document processing to asynchronous cloud jobs so review stays responsive.",
+    ],
     problem: "Useful contract fields start inside documents, but review and renewal work needs structured, consistent records.",
     outcome: "Delivered a workflow for field extraction, partner matching, and review and renewal tracking.",
     contributions: [
@@ -93,20 +113,27 @@ export const projects: Project[] = [
       "Connected those records to review, lifecycle, and partner views.",
       "Moved document processing into asynchronous cloud workflows so the interface stays responsive.",
     ],
-    tags: ["TypeScript", "Next.js", "SQL", "PostgreSQL", "AWS"],
+    tags: ["TypeScript", "Next.js", "PostgreSQL", "AWS"],
     emphasis: "lead",
     visual: "contract",
     overview:
       "A contract intelligence workflow that turns agreements into structured records for review, partner analysis, and renewal tracking.",
     role: "Individual contributor on Samvid’s product team.",
     technical:
-      "TypeScript and Next.js for the review views, SQL and PostgreSQL for contract and partner records, and asynchronous document processing on AWS.",
+      "TypeScript and Next.js for the review views, and PostgreSQL for contract and partner records. Processing is queue-driven: a starter Lambda enqueues the batch, and an SQS FIFO queue sits between extraction, partner matching, clause embeddings, and the clause library. Each stage writes its status back to PostgreSQL. Step Functions was the earlier batch orchestrator, with SQS only on the partner and clause stages.",
   },
   {
     id: "scu-analytics-showdown",
     index: "02",
     title: "SCU Spring Analytics Showdown",
     type: "Team Analytics Competition · Santa Clara University",
+    summary:
+      "Analyzed a client payments dataset to explain payment delays, client engagement, and regional performance.",
+    result: "Second Place, 2025. Presented to faculty and industry judges.",
+    cardPoints: [
+      "Led a four-person team and contributed SQL analysis in PostgreSQL.",
+      "Consolidated the team’s Tableau findings into recommendations.",
+    ],
     problem: "The team needed a clear view of payment delays, client engagement, and regional payment performance.",
     outcome: "Second Place, 2025. The team presented its findings and recommendations to faculty and industry judges.",
     contributions: [
@@ -127,7 +154,7 @@ export const projects: Project[] = [
         title: "Regional payment performance",
         chart: "zone",
         finding:
-          "Payment success rates ranged from 72.3% in Alta Guajira to 81.0% in Sierra Nevada—an 8.8 percentage-point gap.",
+          "Observed payment success rates ranged from 72.25% in Alta Guajira to 81.03% in Sierra Nevada, a gap of about 8.8 percentage points.",
         recommendation:
           "Prioritize operational support in the lower-performing region and investigate practices associated with stronger performance.",
         note: "The map marks Alta Guajira at an approximate regional location.",
@@ -152,16 +179,85 @@ export const projects: Project[] = [
     ],
   },
   {
-    id: "samvid-admin-portal",
+    id: "impact-analysis-tool",
     index: "03",
+    title: "Impact Analysis Tool",
+    type: "Course Final Project · Santa Clara University",
+    repoUrl: "https://github.com/henry-xrk/ISBA2411_NLP_Final_Project",
+    summary:
+      "Reads social-enterprise business plan decks and organizes each venture’s mission, problem, and potential impact for side-by-side review.",
+    result: "Working prototype: upload decks, extract key fields, score impact on three dimensions, then search, ask, and export.",
+    cardPoints: [
+      "Set up the codebase and PostgreSQL document store, and built the LLM field-extraction pipeline.",
+      "Connected impact scores to semantic search and Q&A, and integrated teammates’ contributions.",
+    ],
+    problem: "Reviewing many pitch decks by hand makes it hard to compare missions, problems, and likely impact consistently.",
+    outcome:
+      "A local prototype connecting document extraction, impact scoring, semantic search, and Q&A, with CSV and ZIP export.",
+    contributions: [
+      "Set up the initial project structure, the PostgreSQL documents table, and its database migrations.",
+      "Integrated LLM extraction of mission, problem, and company description into the processing pipeline.",
+      "Brought impact scores into semantic search results and Q&A context, and fixed citation indexing in retrieval.",
+      "Added structured logging and error handling, and integrated teammates’ scoring, extraction, and interface work.",
+    ],
+    tags: ["Python", "Streamlit", "OpenAI", "PostgreSQL", "pgvector"],
+    emphasis: "standard",
+    visual: "impact",
+    screens: [
+      {
+        title: "Dashboard",
+        note: "Scores come from the tool’s own rubric prompts on sample decks. They were not independently validated.",
+        chart: {
+          src: impactDashboard,
+          width: 1600,
+          height: 833,
+          alt: "Impact Analysis Tool dashboard with a search box and a table of three uploaded decks, each with overall, magnitude, effectiveness, and efficiency scores.",
+        },
+      },
+      {
+        title: "Extracted fields for one deck",
+        chart: {
+          src: impactExtraction,
+          width: 1600,
+          height: 974,
+          alt: "Document view for one pitch deck showing its overall score and extracted company description, mission statement, and problem statement.",
+        },
+      },
+      {
+        title: "Analysis Agent",
+        note: "Questions run across the indexed decks, with semantic search turned on.",
+        chart: {
+          src: impactAgent,
+          width: 1600,
+          height: 870,
+          alt: "Analysis Agent screen with document and model selectors, a semantic search toggle, and quick prompt buttons for asking questions across decks.",
+        },
+      },
+    ],
+    overview:
+      "A course final project prototyping a tool that reads social-enterprise pitch decks and organizes what each venture does, the problem it addresses, and how its impact could be assessed.",
+    role: "One of four students on a course team. I set up the repository and core pipeline; teammates led the scoring rubrics, vector indexing, and parts of the interface.",
+    technical:
+      "Python and Streamlit. OpenAI models handle field extraction and rubric-based scoring, and text-embedding-3-large (1,024 dimensions) powers semantic search over PostgreSQL 16 with pgvector, run locally with Docker Compose.",
+  },
+  {
+    id: "samvid-admin-portal",
+    index: "04",
     title: "Samvid Admin Portal",
     type: "Internal Platform · Samvid",
     companyUrl: samvidUrl,
+    summary: "An internal console for checking service health and responding when behavior looks abnormal.",
+    result: "Built and shipped an internal operations dashboard for service health, CloudWatch logs, and alert management.",
+    cardPoints: [
+      "Built the service-health and alert views, with latency compared against recent behavior.",
+      "Added alert history and controls to pause repeated notifications.",
+    ],
     problem: "The team needed a shared place to review service health and respond when behavior looked abnormal.",
-    outcome: "Delivered an internal console for service status, investigation, and alert handling.",
+    outcome:
+      "Shipped as an internal production system that brings service status, CloudWatch logs, investigation, and alert handling into one interface.",
     contributions: [
-      "Built the service-health and alert views.",
-      "Added alert history and a way to hold repeat notices.",
+      "Built the service-health views and CloudWatch log access.",
+      "Added alert history and controls to pause repeated notifications.",
       "Surfaced unusual latency against recent service behavior.",
     ],
     tags: ["TypeScript", "Next.js", "PostgreSQL", "AWS", "CloudWatch"],
@@ -169,29 +265,8 @@ export const projects: Project[] = [
     visual: "admin",
     overview: "An internal operations console that brings service health, investigation, and alerts into one place.",
     role: "Individual contributor on Samvid’s product team.",
-    technical: "A Next.js console backed by PostgreSQL, reading AWS service metrics and logs.",
-  },
-  {
-    id: "esg-research-assistant",
-    index: "04",
-    title: "ESG Research Assistant",
-    type: "Graduate Practicum · Armanino",
-    problem:
-      "Comparing sustainability reports depends on finding the relevant passages and keeping each answer tied to its source.",
-    outcome: "The practicum team delivered a retrieval-based research workflow and evaluation findings for the sponsor.",
-    contributions: [
-      "Led technical implementation on a four-person graduate practicum team.",
-      "Built ingestion, semantic retrieval, and cross-report synthesis in Python.",
-      "Compared a retrieval-augmented workflow with a non-RAG baseline using sponsor-provided questions.",
-    ],
-    tags: ["Python", "OpenAI", "Pinecone", "RAG", "Streamlit"],
-    emphasis: "standard",
-    visual: "esg",
-    overview:
-      "A graduate practicum for Armanino exploring source-grounded answers across automotive sustainability reports.",
-    role: "Technical lead on a four-person graduate practicum team.",
     technical:
-      "Python and Streamlit, with OpenAI embeddings and models and Pinecone retrieval over the reports; answers are organized by source document.",
+      "A Next.js console backed by PostgreSQL. The overview groups services into tiers around the app and reads health, logs, and alerts for each one. Names and counts in the graphic are synthetic.",
   },
 ]
 
@@ -220,7 +295,8 @@ export const experience = [
     role: "Applied AI Engineer, graduate practicum",
     when: "February–June 2025",
     place: "Practicum",
-    detail: "Technical implementation of a research workflow for sustainability reports.",
+    detail:
+      "Led technical implementation for a four-person practicum team building a source-grounded research workflow over sustainability reports.",
   },
   {
     org: "MGM Macau",
@@ -244,15 +320,7 @@ export const education = [
   },
 ]
 
-export const additionalWork = [
-  {
-    title: "Impact Analysis Tool",
-    when: "School project · 2025",
-    url: "https://github.com/henry-xrk/ISBA2411_NLP_Final_Project",
-    linkLabel: "GitHub",
-    detail:
-      "Built a multi-document application comparing sustainability reports with ISSB and SASB standards through semantic retrieval, cross-document synthesis, contradiction analysis, and exportable reports.",
-  },
+export const additionalWork: Array<{ title: string; when: string; detail: string; url?: string; linkLabel?: string }> = [
   {
     title: "U.S. Candy Distribution Dashboard",
     when: "2025",
@@ -260,11 +328,17 @@ export const additionalWork = [
   },
 ]
 
-export const about = {
+export const about: {
+  heading: string
+  photo?: { src: string; width: number; height: number; alt: string }
+  paragraphs: string[]
+  skills: Array<{ title: string; text: string }>
+} = {
   heading: "Business questions, answered with data and software.",
+  photo: { src: profilePhoto, width: 558, height: 620, alt: "Portrait of Rongkai Xu" },
   paragraphs: [
-    "At Samvid, I build contract intelligence workflows and internal tools using TypeScript, Next.js, SQL, PostgreSQL, and AWS. The work spans document processing, partner matching, lifecycle analytics, and service monitoring.",
-    "I earned an M.S. in Business Analytics from Santa Clara University and a B.S. in Business Intelligence and Data Analytics from the University of Macau. My graduate work used Python and retrieval-augmented generation to explore questions across sustainability reports.",
+    "At Samvid, I build contract intelligence workflows and internal tools that turn documents and service data into views teams can act on.",
+    "I like work that starts with a business question and ends with something people use: a clean dataset, a clear analysis, or a small product around it.",
   ],
   skills: [
     {
@@ -277,7 +351,7 @@ export const about = {
     },
     {
       title: "Cloud and operations",
-      text: "AWS Lambda, Step Functions, CloudWatch, Redis, and Docker.",
+      text: "AWS Lambda, Step Functions, SQS, CloudWatch, Redis, and Docker.",
     },
     {
       title: "Applied AI",

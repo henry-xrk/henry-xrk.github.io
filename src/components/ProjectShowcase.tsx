@@ -5,7 +5,8 @@ import type { Project } from "../data/portfolio"
 import { useMediaQuery } from "../hooks/useMediaQuery"
 import { cx } from "../lib/cx"
 import { CaseStudyDialog } from "./CaseStudyDialog"
-import { CompanyLink } from "./CompanyLink"
+import { CompanyLink, ExternalLink } from "./CompanyLink"
+import { ProjectMetrics } from "./ProjectMetrics"
 import { ProjectSketch } from "./sketches"
 
 const ease = [0.22, 1, 0.36, 1] as const
@@ -75,10 +76,10 @@ function CaseArticle({
   return (
     <motion.article
       className={cx("case", `case-${project.emphasis}`, flipped && "is-flipped")}
-      initial={reduced ? false : { opacity: 0, y: 28 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "0px 0px -8% 0px" }}
-      transition={{ duration: reduced ? 0 : 0.65, ease }}
+      initial={reduced ? false : { y: 16 }}
+      whileInView={{ y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: reduced ? 0 : 0.45, ease }}
     >
       <div className="case-visual">
         <ProjectSketch visual={project.visual} />
@@ -87,19 +88,11 @@ function CaseArticle({
         <p className="case-index">{project.index}</p>
         <p className="case-type">{project.type}</p>
         <h3>{project.title}</h3>
-        {project.companyUrl ? <CompanyLink href={project.companyUrl} /> : null}
-        <dl className="case-facts">
-          <div>
-            <dt>Problem</dt>
-            <dd>{project.problem}</dd>
-          </div>
-          <div className="is-outcome">
-            <dt>Outcome</dt>
-            <dd>{project.outcome}</dd>
-          </div>
-        </dl>
+        <p className="case-summary">{project.summary}</p>
+        <p className="case-result">{project.result}</p>
+        {project.metrics ? <ProjectMetrics metrics={project.metrics} /> : null}
         <ul className="highlights">
-          {project.contributions.map((item) => (
+          {project.cardPoints.map((item) => (
             <li key={item}>{item}</li>
           ))}
         </ul>
@@ -108,12 +101,16 @@ function CaseArticle({
             <li key={tag}>{tag}</li>
           ))}
         </ul>
-        <button type="button" className="text-button" onClick={onOpen} ref={setTrigger}>
-          View Case Study
-          <svg className="arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
-            <path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" strokeWidth="1.4" />
-          </svg>
-        </button>
+        <div className="case-actions">
+          <button type="button" className="text-button" onClick={onOpen} ref={setTrigger}>
+            View Case Study
+            <svg className="arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
+              <path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" strokeWidth="1.4" />
+            </svg>
+          </button>
+          {project.companyUrl ? <CompanyLink href={project.companyUrl} /> : null}
+          {project.repoUrl ? <ExternalLink href={project.repoUrl} label="GitHub" /> : null}
+        </div>
       </div>
     </motion.article>
   )

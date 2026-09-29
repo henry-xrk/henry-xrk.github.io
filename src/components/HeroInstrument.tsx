@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from "motion/react"
+import { motion } from "motion/react"
 import { useEffect, useId, useRef, useState } from "react"
 import { signal } from "../data/portfolio"
 import { useMediaQuery } from "../hooks/useMediaQuery"
@@ -128,8 +128,8 @@ export function HeroInstrument() {
                 type="button"
                 className={cx("stage", isActive && "is-active", Boolean(selectedId) && "is-dimmable")}
                 aria-pressed={isActive}
-                initial={reduced ? false : { opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
+                initial={reduced ? false : { y: 12 }}
+                animate={{ y: 0 }}
                 transition={{
                   duration: reduced ? 0 : 0.65,
                   delay: reduced ? 0 : 0.16 + index * 0.08,
@@ -157,17 +157,14 @@ export function HeroInstrument() {
 
       <p className="signal-summary">{signal.summary}</p>
       <div className="stage-detail" aria-live={autoplay && playing ? "off" : "polite"}>
-        <AnimatePresence mode="wait">
-          <motion.p
-            key={detail}
-            initial={reduced ? false : { opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={reduced ? { opacity: 1 } : { opacity: 0, y: -8 }}
-            transition={{ duration: reduced ? 0 : 0.35, ease }}
-          >
-            {detail}
-          </motion.p>
-        </AnimatePresence>
+        <motion.p
+          key={detail}
+          initial={reduced ? false : { y: 4 }}
+          animate={{ y: 0 }}
+          transition={{ duration: reduced ? 0 : 0.3, ease }}
+        >
+          {detail}
+        </motion.p>
       </div>
 
       {autoplay ? (

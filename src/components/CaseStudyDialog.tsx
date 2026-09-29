@@ -3,8 +3,9 @@ import type { MouseEvent } from "react"
 import type { Project } from "../data/portfolio"
 import { charts } from "../data/showdown"
 import { ChartFigure } from "./ChartFigure"
-import { CompanyLink } from "./CompanyLink"
-import { ProjectSketch } from "./sketches"
+import { CompanyLink, ExternalLink } from "./CompanyLink"
+import { ProjectMetrics } from "./ProjectMetrics"
+import { ContractPipeline, ProjectSketch } from "./sketches"
 
 type Props = {
   project: Project
@@ -77,6 +78,7 @@ export function CaseStudyDialog({ project, onClose }: Props) {
             {project.title}
           </h2>
           {project.companyUrl ? <CompanyLink href={project.companyUrl} /> : null}
+          {project.repoUrl ? <ExternalLink href={project.repoUrl} label="GitHub" /> : null}
         </div>
         <button type="button" className="dialog-close" onClick={requestClose}>
           Close
@@ -108,6 +110,7 @@ export function CaseStudyDialog({ project, onClose }: Props) {
       <section className="dialog-section">
         <h3>Outcome</h3>
         <p>{project.outcome}</p>
+        {project.metrics ? <ProjectMetrics metrics={project.metrics} /> : null}
       </section>
 
       {project.findings ? (
@@ -116,7 +119,11 @@ export function CaseStudyDialog({ project, onClose }: Props) {
           <ol className="finding-list">
             {project.findings.map((item) => (
               <li key={item.id}>
-                <ChartFigure title={item.title} chart={charts[item.chart]}>
+                <ChartFigure
+                  title={item.title}
+                  chart={charts[item.chart]}
+                  openLabel={item.chart === "zone" ? "View original chart" : undefined}
+                >
                   {item.note ? <p className="chart-note">{item.note}</p> : null}
                 </ChartFigure>
                 <dl className="finding-text">
@@ -133,11 +140,31 @@ export function CaseStudyDialog({ project, onClose }: Props) {
             ))}
           </ol>
         </section>
+      ) : project.screens ? (
+        <section className="dialog-section">
+          <h3>Screens from the prototype</h3>
+          <ol className="finding-list">
+            {project.screens.map((screen) => (
+              <li key={screen.title}>
+                <ChartFigure title={screen.title} chart={screen.chart} openLabel="View full screen">
+                  {screen.note ? <p className="chart-note">{screen.note}</p> : null}
+                </ChartFigure>
+              </li>
+            ))}
+          </ol>
+        </section>
       ) : (
         <section className="dialog-section dialog-visual">
           <ProjectSketch visual={project.visual} />
         </section>
       )}
+
+      {project.visual === "contract" ? (
+        <section className="dialog-section">
+          <h3>Processing pipeline</h3>
+          <ContractPipeline />
+        </section>
+      ) : null}
 
       <details className="dialog-details">
         <summary>Technical details</summary>

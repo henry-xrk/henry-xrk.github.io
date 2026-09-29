@@ -1,6 +1,5 @@
 import activation from "../assets/showdown/client-activation.jpg"
 import villages from "../assets/showdown/village-delay-counts.jpg"
-import zoneBars from "../assets/showdown/zone-payment-success-bars.jpg"
 import zone from "../assets/showdown/zone-payment-success.jpg"
 
 export type Chart = {
@@ -33,9 +32,9 @@ export const charts: Record<ChartId, Chart> = {
   },
 }
 
-export const zonePreview: Chart = {
-  src: zoneBars,
-  width: 1600,
-  height: 330,
-  alt: "Tableau bar chart of zone-level payment success rate: Sierra Nevada 0.81029, Default Cluster 0.78639, Manaure 0.77006, Alta Guajira 0.72251.",
-}
+export const zoneRates = [
+  { zone: "Sierra Nevada", rate: 81.029, compared: true },
+  { zone: "Default Cluster", rate: 78.639, compared: false },
+  { zone: "Manaure", rate: 77.006, compared: false },
+  { zone: "Alta Guajira", rate: 72.251, compared: true },
+]
